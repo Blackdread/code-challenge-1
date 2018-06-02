@@ -42,9 +42,18 @@ class TransactionGatlingTest extends Simulation {
         "Authorization" -> "${access_token}"
     )
 
+    val timestamp: Long = System.currentTimeMillis
+
     val scn = scenario("Test the Transaction")
         .repeat(2) {
-            exec(http("Create new transaction")
+            exec(http("Create new current time transaction")
+            .post("/transactions")
+            .body(StringBody(s"""{"amount":20.009693, "timestamp":"${System.currentTimeMillis}"}""")).asJSON
+            .check(status.in(201, 204)))
+            .pause(1)
+        }
+        .repeat(2) {
+            exec(http("Create new future transaction")
             .post("/transactions")
             .body(StringBody("""{"amount":1.0051, "timestamp":"2020-01-01T00:00:00.000Z"}""")).asJSON
             .check(status.is(201)))
@@ -57,6 +66,12 @@ class TransactionGatlingTest extends Simulation {
             }
             .pause(10)
         }
+        .exec(http("Create new transaction too old")
+        .post("/transactions")
+        .body(StringBody("""{"amount":20.009693, "timestamp":"0"}""")).asJSON
+        .check(status.is(204)))
+        .pause(1)
+
 
     val users = scenario("Users").exec(scn)
 

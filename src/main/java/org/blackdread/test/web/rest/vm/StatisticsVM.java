@@ -1,21 +1,30 @@
 package org.blackdread.test.web.rest.vm;
 
-import java.io.Serializable;
-
 /**
  * View Model object for returning statistics on Transactions.
  */
 public class StatisticsVM {
 
-    private Double sum;
+    private Double sum = 0.0;
 
-    private Double avg;
+    private Double avg = 0.0;
 
-    private Double max;
+    private Double max = 0.0;
 
-    private Double min;
+    private Double min = 0.0;
 
-    private Long count;
+    private Long count = 0L;
+
+    public StatisticsVM() {
+    }
+
+    public StatisticsVM(final Double sum, final Double avg, final Double max, final Double min, final Long count) {
+        this.sum = sum;
+        this.avg = avg;
+        this.max = max;
+        this.min = min;
+        this.count = count;
+    }
 
     public Double getSum() {
         return sum;

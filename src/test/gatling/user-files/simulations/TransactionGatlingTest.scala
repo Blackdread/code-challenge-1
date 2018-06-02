@@ -51,7 +51,8 @@ class TransactionGatlingTest extends Simulation {
             .pause(10)
             .repeat(5) {
                 exec(http("Get statistics")
-                .get("/statistics"))
+                .get("/statistics")
+                .check(status.is(200)))
                 .pause(10)
             }
             .pause(10)
@@ -60,6 +61,6 @@ class TransactionGatlingTest extends Simulation {
     val users = scenario("Users").exec(scn)
 
     setUp(
-        users.inject(rampUsers(Integer.getInteger("users", 100)) over (Integer.getInteger("ramp", 1) minutes))
+        users.inject(rampUsers(Integer.getInteger("users", 1000)) over (Integer.getInteger("ramp", 1) minutes))
     ).protocols(httpConf)
 }

@@ -44,7 +44,7 @@ public class TransactionResource {
     }
 
     /**
-     * POST  /transactions : Create a new transaction.
+     * POST  /transactions : Add a new transaction.
      *
      * @param transactionVM the transactionVM to create
      * @return the ResponseEntity with status 201 (Created) and with empty body, or with status 204 (Bad Request) if the transaction is older than 60 seconds
@@ -55,7 +55,8 @@ public class TransactionResource {
         log.debug("REST request to add Transaction : {}", transactionVM);
         if (dateTimeService.getCurrentInstant().minus(MAX_ALLOWED_AGE_TRANSACTION_DURATION).isAfter(transactionVM.getTimestampInstant()))
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//        transactionService.addTransaction(transactionVM);
+        // Documentation of test does not specify about timestamp that are in the future (UTC) so we consider it as good input
+        transactionService.addTransaction(transactionVM);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

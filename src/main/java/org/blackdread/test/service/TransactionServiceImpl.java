@@ -4,10 +4,12 @@ import org.blackdread.test.web.rest.vm.StatisticsVM;
 import org.blackdread.test.web.rest.vm.TransactionVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.SortedMap;
@@ -38,6 +40,12 @@ public class TransactionServiceImpl implements TransactionService, TransactionSt
     }
 
     // Can use BigDecimal if we want to make sure to not have rounding errors
+
+    @Scheduled(initialDelay = 60000, fixedDelay = 30000)
+    public void cleanOldData() {
+        final SortedMap<Instant, ValueWrapper> oldData = map.headMap(dateTimeService.getCurrentInstant().minus(DURATION_60_SECONDS.toMillis() * 2, ChronoUnit.MILLIS));
+        oldData.clear();
+    }
 
     @Override
     public void addTransaction(final TransactionVM transactionVM) {

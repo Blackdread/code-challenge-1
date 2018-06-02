@@ -34,6 +34,7 @@ public class CacheConfiguration {
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
             // jhipster-needle-ehcache-add-entry
+//            cm.createCache(org.blackdread.test.domain.Transaction.class.getName(), jcacheConfiguration);
         };
     }
 }
